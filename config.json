@@ -1,0 +1,6 @@
+{
+	"BASE_STRINGS_PATH": "currentdir",
+	"IN_PATH": "csv_files",
+	"OUT_PATH": "output",
+	"LANG_KEYS": ["en", "zh", "ja"]
+}
