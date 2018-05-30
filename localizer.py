@@ -52,7 +52,7 @@ def start_localize(BASE_PATH, IN_PATH, OUT_PATH, LANG_KEYS):
 
   for dirname, dirnames, filenames in os.walk(os.path.join(CURRENT_DIR, IN_PATH)):
 
-    [fwrite.write('\n\n\n/*  AUTO-GENERATED: {timestamp} */\n\n'.format(timestamp=NOW)) for fwrite in allwrites]
+    # [fwrite.write('\n\n\n/*  AUTO-GENERATED: {timestamp} */\n\n'.format(timestamp=NOW)) for fwrite in allwrites]
 
     for f in filenames:
       filename, ext = os.path.splitext(f)
@@ -81,7 +81,7 @@ def start_localize(BASE_PATH, IN_PATH, OUT_PATH, LANG_KEYS):
           # if any row is empty, skip it!
           if any([value == "" for value in row_values]):
             continue
-          [fwrite.write('"{domain}_{key}" = "{lang}";\n'.format(domain=filename, key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
+          [fwrite.write('"{key}" = "{lang}";\n'.format(domain=filename, key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
   [fwrite.close() for fwrite in allwrites]
 
 
