@@ -3,7 +3,6 @@
 
 /*  sample  */
 
-
 "pause_messge" = "一時停止中";
 "start_messge" = "実行を開始する";
 "stop_messge" = "走りを止める";

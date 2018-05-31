@@ -1,4 +1,5 @@
 {
+	"PLATFORM": "ios",
 	"BASE_STRINGS_PATH": "currentdir",
 	"IN_PATH": "csv_files",
 	"OUT_PATH": "output",
