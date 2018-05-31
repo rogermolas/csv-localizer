@@ -3,6 +3,9 @@
 
 /*  sample  */
 
+
 "pause_messge" = "Running paused";
 "start_messge" = "Start running";
 "stop_messge" = "Stop running";
+
+"stop_messge2" = "Stop running";

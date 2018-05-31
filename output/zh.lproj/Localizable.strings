@@ -3,9 +3,13 @@
 
 /*  sample  */
 
+
 "pause_messge" = "暂停运行
 ";
 "start_messge" = "开始跑步
 ";
 "stop_messge" = "停止跑步
+";
+
+"stop_messge2" = "停止跑步
 ";

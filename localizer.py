@@ -4,7 +4,6 @@ import sys
 import csv
 import json
 
-NOW = datetime.datetime.now().strftime("%Y-%m-%d, %H:%M")
 CURRENT_DIR = os.path.dirname(__file__)
 
 def main():
@@ -51,9 +50,6 @@ def start_localize(BASE_PATH, IN_PATH, OUT_PATH, LANG_KEYS):
   allwrites = [open(out_path, 'w') for out_path in full_out_paths]
 
   for dirname, dirnames, filenames in os.walk(os.path.join(CURRENT_DIR, IN_PATH)):
-
-    # [fwrite.write('\n\n\n/*  AUTO-GENERATED: {timestamp} */\n\n'.format(timestamp=NOW)) for fwrite in allwrites]
-
     for f in filenames:
       filename, ext = os.path.splitext(f)
       if ext != '.csv':
@@ -80,8 +76,9 @@ def start_localize(BASE_PATH, IN_PATH, OUT_PATH, LANG_KEYS):
 
           # if any row is empty, skip it!
           if any([value == "" for value in row_values]):
-            continue
-          [fwrite.write('"{key}" = "{lang}";\n'.format(domain=filename, key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
+            [fwrite.write('\n') for idx, fwrite in enumerate(allwrites)]
+          else:
+            [fwrite.write('"{key}" = "{lang}";\n'.format(key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
   [fwrite.close() for fwrite in allwrites]
 
 
