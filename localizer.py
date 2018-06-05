@@ -5,6 +5,7 @@ import json
 
 from ios_localizer import start_localize_ios
 from android_localizer import start_localize_android
+from json_localizer import start_localize_json
 
 CURRENT_DIR = os.path.dirname(__file__)
 
@@ -31,6 +32,10 @@ def main():
 
     if PLATFORM == "ios":
       start_localize_ios(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
+    elif PLATFORM == "android":
+      start_localize_android(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
+    elif PLATFORM == "json":
+      start_localize_json(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
     else:
       start_localize_android(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
     
