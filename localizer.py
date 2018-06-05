@@ -6,6 +6,7 @@ import json
 from ios_localizer import start_localize_ios
 from android_localizer import start_localize_android
 from json_localizer import start_localize_json
+from properties_localizer import start_localize_properties
 
 CURRENT_DIR = os.path.dirname(__file__)
 
@@ -36,8 +37,13 @@ def main():
       start_localize_android(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
     elif PLATFORM == "json":
       start_localize_json(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
+    elif PLATFORM == "properties":
+      start_localize_properties(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
     else:
-      start_localize_android(CURRENT_DIR, BASE_STRINGS_PATH, IN_PATH, OUT_PATH, LANG_KEYS)
+      print 'ERROR LOCALIZING.'
+      print 'Unsupported format.'
+      print '\n\n'
+      pass
     
     print 'DONE LOCALIZING.'
     print '\n\n'
