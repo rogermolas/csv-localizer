@@ -25,10 +25,7 @@ def main():
     if BASE_STRINGS_PATH == "currentdir":
       print "Detect currentdir -> \n  " + CURRENT_DIR
       BASE_STRINGS_PATH = CURRENT_DIR
-
-    print "In path: {0}".format(IN_PATH)
-    print "Out path: {0}".format(OUT_PATH)
-    print "Lang keys: {0}".format(LANG_KEYS)
+    
     print "------------------------------------\nSTART..."
 
     if PLATFORM == "ios":
@@ -46,7 +43,7 @@ def main():
       pass
     
     print 'DONE LOCALIZING.'
-    print '\n\n'
+    print '\n'
 
 if __name__ == '__main__':
     main()
