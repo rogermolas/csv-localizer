@@ -8,7 +8,7 @@ def main(args, loglevel):
   PLATFORM = args.platform
   IN_PATH = args.input
   OUT_PATH = args.output
-  LANG_KEYS = ["en", "zh", "ja"] #static will change later
+  LANG_KEYS = None  #static will change later
   print '\n'
   logging.info("Start Localizing .... ")
   print '\n'
@@ -49,7 +49,7 @@ def main(args, loglevel):
     logging.debug("Platform : %s" % PLATFORM)
     logging.debug("\n")
     logging.info("Generation output : %s" % OUTPUT_DIR)
-    start_localize_ios(IN_PATH, OUTPUT_DIR, LANG_KEYS)
+    start_localize_ios(IN_PATH, OUTPUT_DIR)
   else:
     logging.warn("Invalid platform, platform should be ios or android only")
     logging.debug("\n")
@@ -58,16 +58,19 @@ def main(args, loglevel):
   logging.info("DONE LOCALIZING.")
   print '\n'
 
-def start_localize_ios(SOURCE_PATH, OUTPUT_PATH, LANG_KEYS):
+def start_localize_ios(SOURCE_PATH, OUTPUT_PATH):
   base_out_dir = OUTPUT_PATH
   # each languages
-  for lang in LANG_KEYS:
-    lang_path = os.path.join(base_out_dir, "{0}.lproj/".format(lang))
-    if not os.path.exists(lang_path):
-      os.makedirs(lang_path)
+  # for lang in LANG_KEYS:
+  #   lang_path = os.path.join(base_out_dir, "{0}.lproj/".format(lang))
+  #   if not os.path.exists(lang_path):
+  #     os.makedirs(lang_path)
 
-  full_out_paths = [os.path.join(base_out_dir, "{0}.lproj/".format(langKey) + "Localizable.strings") for langKey in LANG_KEYS]
-  allwrites = [open(out_path, 'w') for out_path in full_out_paths]
+  # full_out_paths = [os.path.join(base_out_dir, "{0}.lproj/".format(langKey) + "Localizable.strings") for langKey in LANG_KEYS]
+  # allwrites = [open(out_path, 'w') for out_path in full_out_paths]
+
+  full_out_paths = None
+  allwrites = None
 
   for dirname, dirnames, filenames in os.walk(SOURCE_PATH):
     for f in filenames:
@@ -79,12 +82,30 @@ def start_localize_ios(SOURCE_PATH, OUTPUT_PATH, LANG_KEYS):
       logging.info("Localizing: %s", filename)
 
       with open(fullpath, 'rb') as csvfile:
-        [fwrite.write('\n\n\n/*  {0}  */\n\n'.format(filename)) for fwrite in allwrites]
-
         reader = csv.reader(csvfile, delimiter=',')
-        iterrows = iter(reader);
-        next(iterrows) # skip first line (it is header).
+        
+        # create language key
+        for i, line in enumerate(reader):
+          if i == 0:
+            line.remove(line[0])
+            LANG_KEYS = line  # assign new value to key
+            
+            # iterate each language
+            for lang in LANG_KEYS:
+              lang_path = os.path.join(base_out_dir, "{0}.lproj/".format(lang))
+              if not os.path.exists(lang_path):
+                os.makedirs(lang_path)
 
+          full_out_paths = [os.path.join(base_out_dir, "{0}.lproj/".format(langKey) + "Localizable.strings") for langKey in LANG_KEYS]
+          allwrites = [open(out_path, 'w') for out_path in full_out_paths]
+
+      with open(fullpath, 'rb') as csvfile:
+        [fwrite.write('\n\n\n/*  {0}  */\n\n'.format(filename)) for fwrite in allwrites]
+        
+        reader = csv.reader(csvfile, delimiter=',')
+        iterrows = iter(reader)
+        next(iterrows) # skip first line (it is header).
+        
         for row in iterrows:
           row_key = row[0].replace(" ", "")
           # comment
