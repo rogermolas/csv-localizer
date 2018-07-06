@@ -8,6 +8,7 @@ is a simple, fast, and fun command line interface writing in Python. The goal is
 | :------|:-------------:|:-------------:|:-------------:|
 
 Sample CSV
+
 | keys| en| zh | ja | 
 | :------|:-------------:|:-------------:|:-------------:|
 |pause_key |paused | 暂停 |一時停止する|
@@ -22,6 +23,7 @@ brew install csv-localizer
 
 ## Usage
 csv-localizer use three required commands 
+
 | Commands| Descriptions| 
 | :------: |:-------------
 | `-p` | Platforms (e.g ios or android) |
