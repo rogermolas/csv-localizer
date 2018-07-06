@@ -151,18 +151,18 @@ def start_localize_ios(source_path, all_writes, lang_keys):
 def start_localize_android(source_path, all_writes, lang_keys):
   allwrites = all_writes
 
+  [fwrite.write('<?xml version="1.0" encoding="utf-8"?>\n') for fwrite in allwrites]
+  [fwrite.write('<resources>') for fwrite in allwrites]
+  
   for dirname, dirnames, filenames in os.walk(source_path):
-    [fwrite.write('<?xml version="1.0" encoding="utf-8"?>\n') for fwrite in allwrites]
-    [fwrite.write('<resources>') for fwrite in allwrites]
-
     for f in filenames:
       filename, ext = os.path.splitext(f)
       if ext != '.csv':
         continue
-
+      
       fullpath = os.path.join(dirname, f)
-      logging.info("Localizing: %s", filename)
-  
+      logging.info("Localizing: %s", filename)  
+
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n<!-- {0} -->\n'.format(filename)) for fwrite in allwrites]
         
@@ -182,28 +182,29 @@ def start_localize_android(source_path, all_writes, lang_keys):
             [fwrite.write('\n') for idx, fwrite in enumerate(allwrites)]
           else:
             [fwrite.write('\t<string name="{key}">{lang}</string>\n'.format(key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
-    [fwrite.write('</resources>') for fwrite in allwrites]
+        [fwrite.write('</resources>') for fwrite in allwrites]
   [fwrite.close() for fwrite in allwrites]
 
 
 # =========================================================================
 # +++++++ Standard boilerplate to call the main() function to begin +++++++
 # =========================================================================
-if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description = "Locatization commands")
-  parser.add_argument("-p",help="Specify Platform (iOS, Android)" ,dest="platform", type=str, required=True)
-  parser.add_argument("-i",help="Input source, CSV file path" ,dest="input", type=str, required=True)
-  parser.add_argument("-o",help="Generated output path for localizable files" ,dest="output", type=str, required=True)
 
-  parser.add_argument("-v",
-                      "--verbose",
-                      help="increase output verbosity",
-                      action="store_true")
-  args = parser.parse_args()
+parser = argparse.ArgumentParser(description = "Locatization commands")
+parser.add_argument("-p",help="Specify Platform (iOS, Android)" ,dest="platform", type=str, required=True)
+parser.add_argument("-i",help="Input source, CSV file path" ,dest="input", type=str, required=True)
+parser.add_argument("-o",help="Generated output path for localizable files" ,dest="output", type=str, required=True)
+
+parser.add_argument("-v",
+                    "--verbose",
+                    help="increase output verbosity",
+                    action="store_true")
+args = parser.parse_args()
   
-  # Setup logging
-  if args.verbose:
-    loglevel = logging.DEBUG
-  else:
-    loglevel = logging.INFO
-  main(args, loglevel)
+# Setup logging
+if args.verbose:
+  loglevel = logging.DEBUG
+else:
+  loglevel = logging.INFO
+
+main(args, loglevel)
