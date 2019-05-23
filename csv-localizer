@@ -57,14 +57,13 @@ def main(args, loglevel):
   else:
     logging.warn("Invalid platform, platform should be ios, android, json only")
     logging.debug("\n")
-    logging.error('ERROR LOCALIZING.')
+    logging.error('ERROR LOCALIZING.\n')
     return
 
-  logging.info("Generation output : %s" % OUTPUT_DIR)
+  logging.info("Generated output directory: %s" % OUTPUT_DIR)
   generate_keys(IN_PATH, OUTPUT_DIR, PLATFORM)
   print '\n'
-  logging.info("DONE LOCALIZING.")
-  print '\n'
+  logging.info("DONE LOCALIZING.\n")
 
 def generate_keys(source_path, output, platform):
   base_out_dir = output
@@ -133,7 +132,7 @@ def start_localize_ios(source_path, all_writes, lang_keys):
         continue
 
       fullpath = os.path.join(dirname, f)
-      logging.info("Localizing: %s", filename)
+      logging.info("Localizing: %s to iOS", filename)
 
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n/*  {0}  */\n'.format(filename)) for fwrite in allwrites]
@@ -153,7 +152,8 @@ def start_localize_ios(source_path, all_writes, lang_keys):
           if any([value == "" for value in row_values]):
             [fwrite.write('\n') for idx, fwrite in enumerate(allwrites)]
           else:
-            [fwrite.write('"{key}" = "{lang}";\n'.format(key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
+            [fwrite.write('"{key}" = "{lang}";\n'.format(key=row_key, lang=row_values[idx]))
+             for idx, fwrite in enumerate(allwrites)]
   [fwrite.close() for fwrite in allwrites]
 
 
@@ -173,7 +173,7 @@ def start_localize_android(source_path, all_writes, lang_keys):
         continue
 
       fullpath = os.path.join(dirname, f)
-      logging.info("Localizing: %s", filename)
+      logging.info("Localizing: %s to Android", filename)
 
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n<!-- {0} -->\n'.format(filename)) for fwrite in allwrites]
@@ -193,7 +193,8 @@ def start_localize_android(source_path, all_writes, lang_keys):
           if any([value == "" for value in row_values]):
             [fwrite.write('\n') for idx, fwrite in enumerate(allwrites)]
           else:
-            [fwrite.write('\t<string name="{key}">{lang}</string>\n'.format(key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
+            [fwrite.write('\t<string name="{key}">{lang}</string>\n'.format(key=row_key, lang=row_values[idx]))
+             for idx, fwrite in enumerate(allwrites)]
         [fwrite.write('</resources>') for fwrite in allwrites]
   [fwrite.close() for fwrite in allwrites]
 
@@ -212,7 +213,9 @@ def start_localize_json(source_path, all_writes, lang_keys):
         continue
 
       fullpath = os.path.join(dirname, f)
-      logging.info("Localizing: %s", filename)
+      logging.info("Localizing: %s to JSON", filename)
+
+      current_row = 0
 
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n/*  {0}  */\n'.format(filename)) for fwrite in allwrites]
@@ -220,24 +223,28 @@ def start_localize_json(source_path, all_writes, lang_keys):
         reader = csv.reader(csvfile, delimiter=',')
         iterrows = iter(reader)
         next(iterrows) # skip first line (it is header).
-
-        for row in iterrows:
-          # total_row = len (list(iterrows))
+        list_data = list(iterrows)
+        
+        for row in list_data:
           row_key = row[0].replace(" ", "")
           # comment
           if row_key[:2] == '//':
             continue
           row_values = [row[i+1] for i in range(len(lang_keys))]
+          separator = ", \n"
+
+          # check if last row then remove ';'
+          if current_row == len(list_data) - 1:
+            separator = "\n"
+          current_row += 1 # iterate row count
+
           # if any row is empty, skip it!
           if any([value == "" for value in row_values]):
             [fwrite.write('\n') for idx, fwrite in enumerate(allwrites)]
           else:
-                for idx, fwrite in enumerate(allwrites):
-                      fwrite.write('"{key}": "{lang}"'.format(key=row_key, lang=row_values[idx]))
-                      fwrite.write(', \n')
-
-            # [fwrite.write('"{key}": "{lang}",\n'.format(key=row_key, lang=row_values[idx])) for idx, fwrite in enumerate(allwrites)]
-        [fwrite.write('}') for fwrite in allwrites]
+            [fwrite.write('"{key}": "{lang}"{separator}'.format(key=row_key, lang=row_values[idx], separator=separator))
+             for idx, fwrite in enumerate(allwrites)]
+      [fwrite.write('}') for fwrite in allwrites]
   [fwrite.close() for fwrite in allwrites]
 
 
