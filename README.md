@@ -27,7 +27,7 @@ csv-localizer use three required commands
 
 | Commands| Descriptions| 
 | :------: |:-------------
-| `-p` | Platforms (e.g ios or android) |
+| `-p` | Platforms (ios, android, json) |
 | `-i` | Input directory, CSV files directory path| 
 | `-0` | Output directory, Generated localizable files path| 
 
