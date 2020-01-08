@@ -226,7 +226,7 @@ def start_localize_json(source_path, all_writes, lang_keys):
         list_data = list(iterrows)
         
         for row in list_data:
-          row_key = row[0].replace(" ", "")
+          #row_key = row[0].replace(" ", "")
           # comment
           if row_key[:2] == '//':
             continue
