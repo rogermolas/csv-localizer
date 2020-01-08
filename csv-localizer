@@ -142,7 +142,7 @@ def start_localize_ios(source_path, all_writes, lang_keys):
         next(iterrows) # skip first line (it is header).
 
         for row in iterrows:
-          #row_key = row[0].replace(" ", "")
+          row_key = row[0]
           # comment
           if row_key[:2] == '//':
             continue
@@ -183,7 +183,7 @@ def start_localize_android(source_path, all_writes, lang_keys):
         next(iterrows) # skip first line (it is header).
 
         for row in iterrows:
-          #row_key = row[0].replace(" ", "")
+          row_key = row[0]
           # comment
           if row_key[:2] == '//':
             continue
@@ -226,7 +226,7 @@ def start_localize_json(source_path, all_writes, lang_keys):
         list_data = list(iterrows)
         
         for row in list_data:
-          #row_key = row[0].replace(" ", "")
+          row_key = row[0]
           # comment
           if row_key[:2] == '//':
             continue
