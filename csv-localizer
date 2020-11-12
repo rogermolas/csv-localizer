@@ -4,6 +4,7 @@ import sys, argparse, logging, os, csv
 PLATFORM = None
 IN_PATH = None
 OUT_PATH = None
+DELIMITER = None
 LANG_KEYS = None  # static will change later
 
 # Gather our code in a main() function
@@ -12,6 +13,11 @@ def main(args, loglevel):
   PLATFORM = args.platform
   IN_PATH = args.input
   OUT_PATH = args.output
+  DELIMITER = args.delimiter 
+
+  # check DELIMITER
+  if args.delimiter == None : DELIMITER = ','
+
   print '\n'
   logging.info("Start Localizing .... ")
   print '\n'
@@ -61,11 +67,11 @@ def main(args, loglevel):
     return
 
   logging.info("Generated output directory: %s" % OUTPUT_DIR)
-  generate_keys(IN_PATH, OUTPUT_DIR, PLATFORM)
+  generate_keys(IN_PATH, OUTPUT_DIR, PLATFORM, DELIMITER)
   print '\n'
   logging.info("DONE LOCALIZING.\n")
 
-def generate_keys(source_path, output, platform):
+def generate_keys(source_path, output, platform, delimiter):
   base_out_dir = output
   full_out_paths = None
   allwrites = None
@@ -79,7 +85,7 @@ def generate_keys(source_path, output, platform):
       fullpath = os.path.join(dirname, f)
 
       with open(fullpath, 'rb') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
+        reader = csv.reader(csvfile, delimiter=delimiter)
         # create language key
         for i, line in enumerate(reader):
           if i == 0:
@@ -112,17 +118,17 @@ def generate_keys(source_path, output, platform):
       allwrites = [open(out_path, 'w') for out_path in full_out_paths]
 
   if platform == "ios":
-    start_localize_ios(source_path, allwrites, LANG_KEYS)
+    start_localize_ios(source_path, allwrites, LANG_KEYS, delimiter)
   if platform == "android":
-    start_localize_android(source_path, allwrites, LANG_KEYS)
+    start_localize_android(source_path, allwrites, LANG_KEYS, delimiter)
   if platform == "json":
-    start_localize_json(source_path, allwrites, LANG_KEYS)
+    start_localize_json(source_path, allwrites, LANG_KEYS, delimiter)
 
 
 # =========================================================================
 # ++++++++++++++++++++++++++++++ iOS ++++++++++++++++++++++++++++++++++++++
 # =========================================================================
-def start_localize_ios(source_path, all_writes, lang_keys):
+def start_localize_ios(source_path, all_writes, lang_keys, delimiter):
   allwrites = all_writes
 
   for dirname, dirnames, filenames in os.walk(source_path):
@@ -137,7 +143,7 @@ def start_localize_ios(source_path, all_writes, lang_keys):
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n/*  {0}  */\n'.format(filename)) for fwrite in allwrites]
 
-        reader = csv.reader(csvfile, delimiter=',')
+        reader = csv.reader(csvfile, delimiter=delimiter)
         iterrows = iter(reader)
         next(iterrows) # skip first line (it is header).
 
@@ -160,7 +166,7 @@ def start_localize_ios(source_path, all_writes, lang_keys):
 # =========================================================================
 # ++++++++++++++++++++++++++++++ Android ++++++++++++++++++++++++++++++++++
 # =========================================================================
-def start_localize_android(source_path, all_writes, lang_keys):
+def start_localize_android(source_path, all_writes, lang_keys, delimiter):
   allwrites = all_writes
 
   [fwrite.write('<?xml version="1.0" encoding="utf-8"?>\n') for fwrite in allwrites]
@@ -178,7 +184,7 @@ def start_localize_android(source_path, all_writes, lang_keys):
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n<!-- {0} -->\n'.format(filename)) for fwrite in allwrites]
 
-        reader = csv.reader(csvfile, delimiter=',')
+        reader = csv.reader(csvfile, delimiter=delimiter)
         iterrows = iter(reader)
         next(iterrows) # skip first line (it is header).
 
@@ -202,7 +208,7 @@ def start_localize_android(source_path, all_writes, lang_keys):
 # =========================================================================
 # ++++++++++++++++++++++++++++++ iOS ++++++++++++++++++++++++++++++++++++++
 # =========================================================================
-def start_localize_json(source_path, all_writes, lang_keys):
+def start_localize_json(source_path, all_writes, lang_keys, delimiter):
   allwrites = all_writes
   [fwrite.write('{') for fwrite in allwrites]
 
@@ -220,7 +226,7 @@ def start_localize_json(source_path, all_writes, lang_keys):
       with open(fullpath, 'rb') as csvfile:
         [fwrite.write('\n/*  {0}  */\n'.format(filename)) for fwrite in allwrites]
 
-        reader = csv.reader(csvfile, delimiter=',')
+        reader = csv.reader(csvfile, delimiter=delimiter)
         iterrows = iter(reader)
         next(iterrows) # skip first line (it is header).
         list_data = list(iterrows)
@@ -255,6 +261,7 @@ parser = argparse.ArgumentParser(description="Locatization commands")
 parser.add_argument("-p", help="Specify Platform (iOS, Android)", dest="platform", type=str, required=True)
 parser.add_argument("-i", help="Input source, CSV file path", dest="input", type=str, required=True)
 parser.add_argument("-o", help="Generated output path for localizable files", dest="output", type=str, required=True)
+parser.add_argument("-d", help="Delimiter used as seperation of values in the CSV file (example ':' or ',')", dest="delimiter", type=str, required=False)
 
 parser.add_argument("-v",
                     "--verbose",
