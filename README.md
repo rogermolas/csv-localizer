@@ -30,6 +30,8 @@ csv-localizer use three required commands
 | `-p` | Platforms (ios, android, json) |
 | `-i` | Input directory, CSV files directory path| 
 | `-o` | Output directory, Generated localizable files path| 
+| `-d` | Delimiter used as seperation of values in the CSV file (example ':' or ',')| 
+
 
 ```bash
 $ csv-localizer -p ios -i your_path/csv_files/ -o your_path/output
