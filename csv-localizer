@@ -224,7 +224,7 @@ def start_localize_json(source_path, all_writes, lang_keys, delimiter):
       current_row = 0
 
       with open(fullpath, 'rb') as csvfile:
-        [fwrite.write('\n'.format(filename)) for fwrite in allwrites]
+        [fwrite.write('\n') for fwrite in allwrites]
 
         reader = csv.reader(csvfile, delimiter=delimiter)
         iterrows = iter(reader)
