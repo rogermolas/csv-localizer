@@ -13,7 +13,7 @@ def main(args, loglevel):
   PLATFORM = args.platform
   IN_PATH = args.input
   OUT_PATH = args.output
-  DELIMITER = args.delimiter 
+  DELIMITER = args.delimiter
 
   # check DELIMITER
   if args.delimiter == None : DELIMITER = ','
@@ -206,7 +206,7 @@ def start_localize_android(source_path, all_writes, lang_keys, delimiter):
 
 
 # =========================================================================
-# ++++++++++++++++++++++++++++++ iOS ++++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++ JSON +++++++++++++++++++++++++++++++++++++
 # =========================================================================
 def start_localize_json(source_path, all_writes, lang_keys, delimiter):
   allwrites = all_writes
@@ -224,13 +224,13 @@ def start_localize_json(source_path, all_writes, lang_keys, delimiter):
       current_row = 0
 
       with open(fullpath, 'rb') as csvfile:
-        [fwrite.write('\n/*  {0}  */\n'.format(filename)) for fwrite in allwrites]
+        [fwrite.write('\n') for fwrite in allwrites]
 
         reader = csv.reader(csvfile, delimiter=delimiter)
         iterrows = iter(reader)
         next(iterrows) # skip first line (it is header).
         list_data = list(iterrows)
-        
+
         for row in list_data:
           row_key = row[0].replace(" ", "")
           # comment
