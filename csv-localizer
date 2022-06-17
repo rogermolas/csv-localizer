@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, argparse, logging, os, csv
 
 PLATFORM = None
@@ -18,9 +18,9 @@ def main(args, loglevel):
   # check DELIMITER
   if args.delimiter == None : DELIMITER = ','
 
-  print '\n'
+  print ('\n')
   logging.info("Start Localizing .... ")
-  print '\n'
+  print ('\n')
   logging.info("------------------------------------")
 
   # check source path
@@ -68,7 +68,7 @@ def main(args, loglevel):
 
   logging.info("Generated output directory: %s" % OUTPUT_DIR)
   generate_keys(IN_PATH, OUTPUT_DIR, PLATFORM, DELIMITER)
-  print '\n'
+  print ('\n')
   logging.info("DONE LOCALIZING.\n")
 
 def generate_keys(source_path, output, platform, delimiter):
@@ -84,7 +84,7 @@ def generate_keys(source_path, output, platform, delimiter):
 
       fullpath = os.path.join(dirname, f)
 
-      with open(fullpath, 'rb') as csvfile:
+      with open(fullpath, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=delimiter)
         # create language key
         for i, line in enumerate(reader):
@@ -140,7 +140,7 @@ def start_localize_ios(source_path, all_writes, lang_keys, delimiter):
       fullpath = os.path.join(dirname, f)
       logging.info("Localizing: %s to iOS", filename)
 
-      with open(fullpath, 'rb') as csvfile:
+      with open(fullpath, 'r') as csvfile:
         [fwrite.write('\n/*  {0}  */\n'.format(filename)) for fwrite in allwrites]
 
         reader = csv.reader(csvfile, delimiter=delimiter)
@@ -181,7 +181,7 @@ def start_localize_android(source_path, all_writes, lang_keys, delimiter):
       fullpath = os.path.join(dirname, f)
       logging.info("Localizing: %s to Android", filename)
 
-      with open(fullpath, 'rb') as csvfile:
+      with open(fullpath, 'r') as csvfile:
         [fwrite.write('\n<!-- {0} -->\n'.format(filename)) for fwrite in allwrites]
 
         reader = csv.reader(csvfile, delimiter=delimiter)
@@ -223,7 +223,7 @@ def start_localize_json(source_path, all_writes, lang_keys, delimiter):
 
       current_row = 0
 
-      with open(fullpath, 'rb') as csvfile:
+      with open(fullpath, 'r') as csvfile:
         [fwrite.write('\n') for fwrite in allwrites]
 
         reader = csv.reader(csvfile, delimiter=delimiter)
